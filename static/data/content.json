@@ -1,0 +1,197 @@
+{
+  "site": {
+    "title": "Muhammad Moiz Ahmed",
+    "brand": "Muhammad Moiz Ahmed",
+    "role": "Backend Developer | AspiringAI Engineer",
+    "description": "I build intelligent Python systems for automation, AI, and real-world problem solving",
+    "image": "photo.jpeg"
+  },
+  "social": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/muhammadmoizahmed",
+      "icon": "fa-brands fa-github"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/muhammad-moiz-ahmed-21b55424b/",
+      "icon": "fa-brands fa-linkedin"
+    },
+    {
+      "name": "Freelancer",
+      "url": "https://www.freelancer.com/u/MoizAhmed003",
+      "icon": "fa-solid fa-briefcase"
+    },
+    {
+      "name": "WhatsApp",
+      "url": "https://wa.me/923162595073",
+      "icon": "fa-brands fa-whatsapp"
+    }
+  ],
+  "about": {
+    "paragraph": "I am a passionate and results-driven Python and AI Developer with strong experience in building automation systems, AI-powered applications, and backend solutions. I enjoy turning complex problems into smart, efficient, and scalable software using Python and modern AI technologies.\r\n\r\nMy work includes developing OCR systems, sign language recognition solutions, automation bots, and Flask-based web applications. I have hands-on experience with machine learning, computer vision, API integration, and web automation, allowing me to deliver reliable solutions that perform well in real-world environments.\r\n\r\nI am continuously learning and improving my skills to stay up to date with emerging technologies, with a clear goal of building intelligent systems that create real impact for users and businesses."
+  },
+  "skills": [
+    {
+      "name": "Python",
+      "icon": "fa-brands fa-python"
+    },
+    {
+      "name": "Pandas",
+      "icon": "fa-solid fa-table"
+    },
+    {
+      "name": "NumPy",
+      "icon": "fa-solid fa-cubes"
+    },
+    {
+      "name": "REST APIs",
+      "icon": "fa-solid fa-plug"
+    },
+    {
+      "name": "MySQL",
+      "icon": "fa-solid fa-database"
+    },
+    {
+      "name": "Scikit-Learn",
+      "icon": "fa-solid fa-brain"
+    },
+    {
+      "name": "TensorFlow",
+      "icon": "fa-solid fa-network-wired"
+    },
+    {
+      "name": "PyTorch",
+      "icon": "fa-solid fa-microchip"
+    },
+    {
+      "name": "AI & Machine Learning",
+      "icon": "fa-solid fa-robot"
+    },
+    {
+      "name": "AI Model Integration (APIs)",
+      "icon": "fa-solid fa-code-branch"
+    },
+    {
+      "name": "Flask",
+      "icon": "fa-solid fa-fire"
+    },
+    {
+      "name": "Django",
+      "icon": "fa-solid fa-leaf"
+    },
+    {
+      "name": "Web Scraping",
+      "icon": "fa-solid fa-spider"
+    },
+    {
+      "name": "Task Automation & Scripting",
+      "icon": "fa-solid fa-gears"
+    },
+    {
+      "name": "File Handling & Error Handling",
+      "icon": "fa-solid fa-file"
+    },
+    {
+      "name": "Matplotlib",
+      "icon": "fa-solid fa-chart-line"
+    }
+  ],
+  "projects": {
+    "all": [
+      {
+        "title": "OCR Pro (Python)",
+        "description": "Designed and developed a Python-based application to extract text from images using image processing and OCR techniques. Utilized OpenCV and Pytesseract for real-time text recognition, demonstrating practical implementation of AI concepts.",
+        "link": "https://github.com/muhammadmoizahmed/ocr_app",
+        "images": [
+          "1.png",
+          "2.png",
+          "3.png",
+          "4.png",
+          "5.png",
+          "6.png"
+        ]
+      },
+      {
+        "title": "Sign Language Recognition System (Python)",
+        "description": "Built a Python-based Library Management System to automate book tracking, member records, and transactions. Implemented key features for efficient cataloging, borrowing/returning, and search functionality.",
+        "link": "https://github.com/muhammadmoizahmed/LibraryManagement-System",
+        "images": [
+          "grey-and-dark-black-thank-you-.png",
+          "download.jpg",
+          "picture1.png",
+          "picture2.png",
+          "picture3.png",
+          "picture4.png",
+          "picture5.png",
+          "picture6.png"
+        ]
+      },
+      {
+        "title": "Bulk Email Sender Application (Python)",
+        "description": "A complete bulk email sender application using Python to send large volumes of emails efficiently. Implemented features such as SMTP integration, email templating, attachment handling, error logging, and delivery status monitoring to ensure reliable and scalable email campaigns.",
+        "images": [
+          "Grey_and_Dark_Black_Thank_You_Greetings_Card.png",
+          "Screenshot_2026-01-06_161200.png",
+          "Screenshot_2026-01-06_161305.png",
+          "Screenshot_2026-01-06_161336.png",
+          "1.png",
+          "2.png",
+          "3.png",
+          "4.png"
+        ]
+      },
+      {
+        "title": "Automated Web Scraping Solutions (Python)",
+        "description": "Developed automated web scraping tools in Python to extract structured data from dynamic and static websites. Utilized libraries such as Selenium, BeautifulSoup, and Requests to handle pagination, dynamic content, and data cleaning for reliable data extraction.",
+        "images": [
+          "grey-and-dark-black-thank-you-.png",
+          "1.png",
+          "2.png",
+          "3.png",
+          "4.png",
+          "5.png",
+          "6.png",
+          "7.png",
+          "8.png",
+          "9.png",
+          "10.png",
+          "11.png"
+        ]
+      },
+      {
+        "title": "CAPTCHA Handling & Automation",
+        "description": "Implemented CAPTCHA handling and bypassing techniques for automation workflows using intelligent request handling, session management, and browser automation strategies to maintain efficiency while minimizing detection.",
+        "images": [
+          "1.png",
+          "2.png",
+          "3.png",
+          "4.png",
+          "5.png"
+        ]
+      },
+      {
+        "title": "API Integration & Automation",
+        "description": "Integrated third-party and custom APIs into Python applications to automate data exchange, authentication, and workflow processes. Experienced in RESTful APIs, JSON handling, and secure token-based communication.",
+        "images": []
+      },
+      {
+        "title": "Purchasing / Checkout Automation Bot",
+        "description": "Developed a Python-based purchasing bot to automate product selection, cart handling, checkout processes, and order confirmation on e-commerce platforms. Optimized for speed, reliability, and error handling.",
+        "images": [
+          "1.png",
+          "2.png",
+          "3.png",
+          "4.png",
+          "5.png",
+          "6.png",
+          "7.png",
+          "8.png",
+          "9.png",
+          "10.png",
+          "11.png"
+        ]
+      }
+    ]
+  }
+}
