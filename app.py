@@ -8,12 +8,15 @@ from datetime import datetime
 import urllib.request
 import urllib.parse
 from werkzeug.utils import secure_filename
+import re
+import shutil
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key")
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 60 * 60 * 24 * 30
 
 def load_content():
     path = os.path.join(os.path.dirname(__file__), "static", "data", "content.json")
@@ -39,6 +42,11 @@ def verify_recaptcha(token: str) -> bool:
             return bool(result.get("success"))
     except Exception:
         return False
+
+def slugify(text):
+    s = re.sub(r"[^a-zA-Z0-9]+", "-", (text or "").strip().lower())
+    s = re.sub(r"-{2,}", "-", s).strip("-")
+    return s or "project"
 
 @app.route("/")
 def index():
@@ -133,6 +141,17 @@ def admin():
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     content["site"]["image"] = filename
+            # Handle resume (PDF)
+            if 'resume' in request.files:
+                file = request.files['resume']
+                if file and file.filename:
+                    filename = secure_filename(file.filename)
+                    ext = os.path.splitext(filename)[1].lower()
+                    if ext == '.pdf':
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                        content["site"]["resume"] = filename
+                    else:
+                        flash("Please upload a PDF file for the resume.", "error")
             flash("Site info updated.", "success")
             
         elif section == "social":
@@ -192,6 +211,7 @@ def admin():
             if action == "add":
                 name = request.form.get("name", "").strip()
                 icon = request.form.get("icon", "").strip()
+                level = request.form.get("level", "").strip()
                 image_filename = ""
                 if 'image' in request.files:
                     file = request.files['image']
@@ -202,6 +222,8 @@ def admin():
                 
                 if name:
                     entry = {"name": name, "icon": icon}
+                    if level:
+                        entry["level"] = level
                     if image_filename:
                         entry["image"] = image_filename
                     content["skills"].append(entry)
@@ -216,6 +238,7 @@ def admin():
                 if 0 <= idx < len(content["skills"]):
                     name = request.form.get("name", "").strip()
                     icon = request.form.get("icon", "").strip()
+                    level = request.form.get("level", "").strip()
                     # Keep existing image if no new one
                     existing = content["skills"][idx]
                     image_filename = existing.get("image", "")
@@ -228,9 +251,97 @@ def admin():
                             image_filename = filename
                     
                     content["skills"][idx] = {"name": name, "icon": icon}
+                    if level:
+                        content["skills"][idx]["level"] = level
+                    else:
+                        content["skills"][idx].pop("level", None)
                     if image_filename:
                         content["skills"][idx]["image"] = image_filename
                     flash("Skill updated.", "success")
+
+        elif section == "testimonials":
+            content.setdefault("testimonials", [])
+            action = request.form.get("action", "")
+            if action == "add":
+                name = request.form.get("name", "").strip()
+                project = request.form.get("project", "").strip()
+                feedback = request.form.get("feedback", "").strip()
+                if name and feedback:
+                    content["testimonials"].append({
+                        "name": name,
+                        "project": project,
+                        "feedback": feedback
+                    })
+                    flash("Testimonial added.", "success")
+                else:
+                    flash("Name and feedback are required.", "error")
+            elif action == "delete":
+                idx = int(request.form.get("index", -1))
+                if 0 <= idx < len(content["testimonials"]):
+                    content["testimonials"].pop(idx)
+                    flash("Testimonial deleted.", "success")
+                else:
+                    flash("Invalid index.", "error")
+            elif action == "update":
+                idx = int(request.form.get("index", -1))
+                if 0 <= idx < len(content["testimonials"]):
+                    name = request.form.get("name", "").strip()
+                    project = request.form.get("project", "").strip()
+                    feedback = request.form.get("feedback", "").strip()
+                    content["testimonials"][idx] = {
+                        "name": name,
+                        "project": project,
+                        "feedback": feedback
+                    }
+                    flash("Testimonial updated.", "success")
+                else:
+                    flash("Invalid index.", "error")
+
+        elif section == "cases":
+            content.setdefault("case_studies", [])
+            action = request.form.get("action", "")
+            if action == "add":
+                title = request.form.get("title", "").strip()
+                problem = request.form.get("problem", "").strip()
+                solution = request.form.get("solution", "").strip()
+                tech = request.form.get("tech", "").strip()
+                result = request.form.get("result", "").strip()
+                if title and problem and solution:
+                    content["case_studies"].append({
+                        "title": title,
+                        "problem": problem,
+                        "solution": solution,
+                        "tech": tech,
+                        "result": result
+                    })
+                    flash("Case study added.", "success")
+                else:
+                    flash("Title, problem, and solution are required.", "error")
+            elif action == "delete":
+                idx = int(request.form.get("index", -1))
+                if 0 <= idx < len(content["case_studies"]):
+                    content["case_studies"].pop(idx)
+                    flash("Case study deleted.", "success")
+                else:
+                    flash("Invalid index.", "error")
+            elif action == "update":
+                idx = int(request.form.get("index", -1))
+                if 0 <= idx < len(content["case_studies"]):
+                    title = request.form.get("title", "").strip()
+                    problem = request.form.get("problem", "").strip()
+                    solution = request.form.get("solution", "").strip()
+                    tech = request.form.get("tech", "").strip()
+                    result = request.form.get("result", "").strip()
+                    content["case_studies"][idx] = {
+                        "title": title,
+                        "problem": problem,
+                        "solution": solution,
+                        "tech": tech,
+                        "result": result
+                    }
+                    flash("Case study updated.", "success")
+                else:
+                    flash("Invalid index.", "error")
 
         elif section == "project":
             idx = request.form.get("index", "").strip()
@@ -245,15 +356,35 @@ def admin():
                 for file in files:
                     if file and file.filename:
                         filename = secure_filename(file.filename)
-                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                        new_images.append(filename)
+                        if idx.isdigit():
+                            i_temp = int(idx)
+                        else:
+                            i_temp = None
+                        slug = slugify(title if title else f"project-{i_temp if i_temp is not None else len(content.get('projects', {}).get('all', []))}")
+                        folder = os.path.join(app.config['UPLOAD_FOLDER'], "projects", slug)
+                        os.makedirs(folder, exist_ok=True)
+                        dest = os.path.join(folder, filename)
+                        file.save(dest)
+                        rel = os.path.join("projects", slug, filename).replace("\\", "/")
+                        new_images.append(rel)
             
             action = request.form.get("action", "save")
             
             if action == "delete" and idx.isdigit():
                 i = int(idx)
                 if 0 <= i < len(content.get("projects", {}).get("all", [])):
-                    content["projects"]["all"].pop(i)
+                    entry = content["projects"]["all"].pop(i)
+                    imgs = entry.get("images", [])
+                    if imgs:
+                        first = imgs[0]
+                        parts = first.split("/")
+                        if len(parts) >= 2:
+                            folder = os.path.join(app.config['UPLOAD_FOLDER'], parts[0], parts[1])
+                            if os.path.isdir(folder):
+                                try:
+                                    shutil.rmtree(folder)
+                                except Exception:
+                                    pass
                     flash("Project deleted.", "success")
             elif not title or not description:
                 flash("Title and description are required.", "error")
@@ -272,7 +403,17 @@ def admin():
                         # Handle deletions
                         delete_images = request.form.getlist("delete_images")
                         current_images = entry.get("images", [])
-                        remaining_images = [img for img in current_images if img not in delete_images]
+                        remaining_images = []
+                        for img in current_images:
+                            if img in delete_images:
+                                path = os.path.join(app.config['UPLOAD_FOLDER'], img)
+                                if os.path.isfile(path):
+                                    try:
+                                        os.remove(path)
+                                    except Exception:
+                                        pass
+                            else:
+                                remaining_images.append(img)
                         
                         # Combine
                         entry["images"] = remaining_images + new_images
@@ -289,8 +430,18 @@ def admin():
         
         save_content(content)
         return redirect(url_for("admin"))
-        
+
     return render_template("admin.html", content=content, year=datetime.now().year)
+
+@app.after_request
+def add_caching_headers(response):
+    try:
+        path = request.path or ""
+        if path.startswith("/static/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    except Exception:
+        pass
+    return response
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)

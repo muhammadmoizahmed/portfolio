@@ -4,25 +4,47 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ content.site.title if content and content.site.title else "Portfolio" }}</title>
+    <meta name="description" content="{{ content.site.description if content and content.site.description else 'Developer portfolio' }}">
+    <link rel="canonical" href="{{ request.url_root }}">
+    <meta property="og:title" content="{{ content.site.title if content and content.site.title else 'Portfolio' }}">
+    <meta property="og:description" content="{{ content.site.description if content and content.site.description else 'Developer portfolio' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url_root }}">
+    <meta property="og:image" content="{{ url_for('static', filename='uploads/' + content.site.image) if content and content.site.image else '' }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ content.site.title if content and content.site.title else 'Portfolio' }}">
+    <meta name="twitter:description" content="{{ content.site.description if content and content.site.description else 'Developer portfolio' }}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='uploads/' + content.site.image) if content and content.site.image else '' }}">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
   </head>
-  <body class="bg-gray-900 text-gray-100">
+  <body class="bg-gray-900 text-gray-100 antialiased selection:bg-teal-600 selection:text-white">
+    <div id="scroll-progress" class="fixed top-0 left-0 h-0.5 bg-teal-500 z-50 w-0"></div>
     <header class="fixed top-0 inset-x-0 z-50 bg-gray-900/80 backdrop-blur border-b border-gray-800" style="transform: translateZ(0); will-change: transform;">
-      <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="#" class="text-xl md:text-2xl font-semibold tracking-tight">{{ content.site.brand if content and content.site.brand else "Muhammad Moiz Ahmed" }}</a>
-        <button id="nav-toggle" class="md:hidden p-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-200">
+      <nav class="relative max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="#" class="text-xl md:text-2xl font-extrabold tracking-tight text-gradient animate-gradient">{{ content.site.brand if content and content.site.brand else "Muhammad Moiz Ahmed" }}</a>
+        <button id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" class="md:hidden p-2 rounded-lg bg-gray-800 border border-gray-700 text-gray-200">
           <i class="fa-solid fa-bars"></i>
         </button>
-        <div id="nav-menu" class="hidden md:flex gap-6 items-center">
-          <a href="#hero" class="hover:text-teal-400">Home</a>
-          <a href="#about" class="hover:text-teal-400">About</a>
-          <a href="#skills" class="hover:text-teal-400">Skills</a>
-          <a href="#projects" class="hover:text-teal-400">Projects</a>
-          <a href="#contact" class="hover:text-teal-400">Contact</a>
+        <div id="nav-menu" class="hidden absolute left-4 right-4 top-full mt-2 bg-gray-900/95 border border-gray-800 rounded-xl p-4 shadow-xl flex flex-col gap-3
+                                   md:static md:bg-transparent md:border-0 md:p-0 md:shadow-none md:flex md:flex-row md:items-center md:gap-6">
+          <a href="#hero" class="block px-4 py-3 rounded-lg font-semibold text-gray-200 border border-gray-800 hover:bg-teal-700 hover:text-white
+                                 md:px-0 md:py-0 md:rounded-none md:border-0 md:bg-transparent md:hover:bg-transparent md:hover:text-teal-400">Home</a>
+          <a href="#about" class="block px-4 py-3 rounded-lg font-semibold text-gray-200 border border-gray-800 hover:bg-teal-700 hover:text-white
+                                  md:px-0 md:py-0 md:rounded-none md:border-0 md:bg-transparent md:hover:bg-transparent md:hover:text-teal-400">About</a>
+          <a href="#skills" class="block px-4 py-3 rounded-lg font-semibold text-gray-200 border border-gray-800 hover:bg-teal-700 hover:text-white
+                                   md:px-0 md:py-0 md:rounded-none md:border-0 md:bg-transparent md:hover:bg-transparent md:hover:text-teal-400">Skills</a>
+          <a href="#projects" class="block px-4 py-3 rounded-lg font-semibold text-gray-200 border border-gray-800 hover:bg-teal-700 hover:text-white
+                                     md:px-0 md:py-0 md:rounded-none md:border-0 md:bg-transparent md:hover:bg-transparent md:hover:text-teal-400">Projects</a>
+          <a href="#contact" class="block px-4 py-3 rounded-lg font-semibold text-gray-200 border border-gray-800 hover:bg-teal-700 hover:text-white
+                                    md:px-0 md:py-0 md:rounded-none md:border-0 md:bg-transparent md:hover:bg-transparent md:hover:text-teal-400">Contact</a>
         </div>
       </nav>
     </header>
@@ -39,18 +61,232 @@
         </div>
       </div>
     </footer>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script>AOS.init();</script>
+    <!-- Global UI overlays -->
+    <div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 items-end pointer-events-none"></div>
+    <div id="page-fade" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 z-[90]"></div>
+    <div id="page-spinner" class="fixed inset-0 hidden items-center justify-center z-[95]">
+      <div class="h-10 w-10 rounded-full border-2 border-teal-500 border-t-transparent animate-spin"></div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    <script id="flash-data" type="application/json">{{ messages|tojson|safe }}</script>
+    {% endwith %}
+    <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const toggle = document.getElementById("nav-toggle");
         const menu = document.getElementById("nav-menu");
-        if (toggle && menu) {
-          toggle.addEventListener("click", () => {
-            menu.classList.toggle("hidden");
+        const header = document.querySelector("header");
+        const progress = document.getElementById("scroll-progress");
+        const pageFade = document.getElementById('page-fade');
+        const pageSpinner = document.getElementById('page-spinner');
+        const toastContainer = document.getElementById('toast-container');
+        if (!toggle || !menu) return;
+        const links = menu.querySelectorAll("a[href^='#']");
+        
+        function isMobile() { return window.innerWidth < 768; }
+        function closeMenu() {
+          if (isMobile()) {
+            menu.classList.add("opacity-0", "scale-95", "transform");
+            setTimeout(() => {
+              menu.classList.add("hidden");
+              menu.classList.remove("opacity-0", "scale-95", "transform", "transition-all", "duration-200");
+            }, 180);
+            document.body.classList.remove("overflow-hidden");
+          } else {
+            menu.classList.add("hidden");
+          }
+          toggle.setAttribute("aria-expanded", "false");
+        }
+        function openMenu() {
+          menu.classList.remove("hidden");
+          if (isMobile()) {
+            menu.classList.add("transition-all", "duration-200", "opacity-0", "scale-95", "transform");
+            requestAnimationFrame(() => {
+              menu.classList.remove("opacity-0", "scale-95");
+            });
+            document.body.classList.add("overflow-hidden");
+          }
+          toggle.setAttribute("aria-expanded", "true");
+        }
+        toggle.addEventListener("click", () => {
+          if (menu.classList.contains("hidden")) openMenu();
+          else closeMenu();
+        });
+        links.forEach(a => a.addEventListener("click", () => closeMenu()));
+        document.addEventListener("click", (e) => {
+          const within = menu.contains(e.target) || toggle.contains(e.target);
+          if (!within) closeMenu();
+        });
+        window.addEventListener("resize", () => {
+          if (window.innerWidth >= 768) {
+            toggle.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        function onScroll() {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+          if (progress) progress.style.width = pct + "%";
+          if (header) {
+            if (window.scrollY > 8) header.classList.add("shadow-md");
+            else header.classList.remove("shadow-md");
+          }
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+
+        if (window.AOS) {
+          AOS.init({ duration: 700, once: true, offset: 80, easing: 'ease-out' });
+        }
+
+        // Page transition: fade-in on load
+        requestAnimationFrame(() => {
+          if (pageFade) pageFade.classList.add('pointer-events-none');
+          if (pageFade) pageFade.classList.add('opacity-0');
+        });
+
+        function showOverlay() {
+          if (pageFade) {
+            pageFade.classList.remove('pointer-events-none');
+            pageFade.classList.remove('opacity-0');
+          }
+          if (pageSpinner) {
+            pageSpinner.classList.remove('hidden');
+            pageSpinner.classList.add('flex');
+          }
+        }
+        function hideOverlay() {
+          if (pageFade) {
+            pageFade.classList.add('opacity-0');
+            setTimeout(() => pageFade.classList.add('pointer-events-none'), 200);
+          }
+          if (pageSpinner) {
+            pageSpinner.classList.add('hidden');
+            pageSpinner.classList.remove('flex');
+          }
+        }
+
+        // Intercept internal navigations for transition
+        document.addEventListener('click', (e) => {
+          const a = e.target.closest('a');
+          if (!a) return;
+          const href = a.getAttribute('href');
+          const target = a.getAttribute('target');
+          if (!href || href.startsWith('#') || target === '_blank') return;
+          const isSameOrigin = a.origin === window.location.origin;
+          if (isSameOrigin) {
+            e.preventDefault();
+            showOverlay();
+            setTimeout(() => { window.location.href = href; }, 150);
+          }
+        });
+        // Show overlay on form submit
+        document.querySelectorAll('form').forEach(f => {
+          f.addEventListener('submit', () => { showOverlay(); });
+        });
+
+        // Toasts
+        function showToast(message, category) {
+          if (!toastContainer) return;
+          const wrap = document.createElement('div');
+          wrap.className = 'toast-enter toast-enter-active pointer-events-auto';
+          const base = 'px-4 py-3 rounded-lg shadow-lg text-sm flex items-start gap-3 border';
+          const kind = category === 'success' ? 'bg-teal-700/90 border-teal-600 text-white' : category === 'error' ? 'bg-red-700/90 border-red-600 text-white' : 'bg-gray-800/90 border-gray-700 text-gray-100';
+          const icon = category === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : category === 'error' ? '<i class="fa-solid fa-triangle-exclamation"></i>' : '<i class="fa-solid fa-bell"></i>';
+          wrap.innerHTML = `<div class="${base} ${kind}"><span class="mt-0.5">${icon}</span><span>${message}</span><button class="ml-3 text-white/70 hover:text-white" aria-label="Close">×</button></div>`;
+          const closeBtn = wrap.querySelector('button');
+          const remove = () => {
+            wrap.style.transition = 'opacity .2s ease, transform .2s ease';
+            wrap.style.opacity = '0';
+            wrap.style.transform = 'translateY(-4px)';
+            setTimeout(() => wrap.remove(), 200);
+          };
+          closeBtn.addEventListener('click', remove);
+          toastContainer.appendChild(wrap);
+          setTimeout(remove, 3500);
+        }
+        const flashScript = document.getElementById('flash-data');
+        let __FLASH__ = [];
+        if (flashScript) {
+          try { __FLASH__ = JSON.parse(flashScript.textContent || '[]'); } catch (e) { __FLASH__ = []; }
+        }
+        if (Array.isArray(__FLASH__)) {
+          __FLASH__.forEach(([category, msg]) => showToast(msg, category));
+        }
+
+        // Ripple micro-interaction for buttons/links with [data-ripple]
+        function initRipple() {
+          document.body.addEventListener('click', (e) => {
+            const el = e.target.closest('[data-ripple]');
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height);
+            ripple.className = 'ripple';
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+            el.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
           });
         }
+        initRipple();
+
+        // Tilt hover effect for cards with [data-tilt]
+        function initTilt() {
+          const tiltEls = document.querySelectorAll('[data-tilt]');
+          tiltEls.forEach((card) => {
+            const max = 6;
+            function onMove(ev) {
+              const r = card.getBoundingClientRect();
+              const dx = (ev.clientX - r.left) / r.width - 0.5;
+              const dy = (ev.clientY - r.top) / r.height - 0.5;
+              card.style.transform = `rotateX(${(-dy * max).toFixed(2)}deg) rotateY(${(dx * max).toFixed(2)}deg)`;
+            }
+            function reset() { card.style.transform = ''; }
+            card.addEventListener('mousemove', onMove);
+            card.addEventListener('mouseleave', reset);
+            card.addEventListener('touchmove', (e) => {
+              if (!e.touches[0]) return; const t = e.touches[0]; onMove({ clientX: t.clientX, clientY: t.clientY });
+            }, { passive: true });
+            card.addEventListener('touchend', reset);
+          });
+        }
+        initTilt();
+
+        // Light parallax on elements with [data-parallax] (translateY based on scroll)
+        function initParallax() {
+          const els = Array.from(document.querySelectorAll('[data-parallax]'));
+          if (!els.length) return;
+          function update() {
+            const y = window.scrollY;
+            els.forEach(el => {
+              const speed = parseFloat(el.getAttribute('data-parallax')) || 0.2;
+              el.style.transform = `translate3d(0, ${y * speed}px, 0)`;
+            });
+          }
+          update();
+          window.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+        }
+        initParallax();
+
+        // Form feedback: shake on invalid required fields
+        function enhanceForms() {
+          document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (ev) => {
+              const invalid = form.querySelector('[required]:invalid');
+              if (invalid) {
+                ev.preventDefault();
+                form.classList.remove('animate-shake');
+                void form.offsetWidth; // reflow
+                form.classList.add('animate-shake');
+                showToast('Please fill all required fields.', 'error');
+              }
+            });
+          });
+        }
+        enhanceForms();
       });
     </script>
   </body>

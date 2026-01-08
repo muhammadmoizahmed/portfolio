@@ -1,37 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="max-w-6xl mx-auto px-4 py-16">
-  <div class="mb-8 flex items-center justify-between">
-    <div>
+  <div class="mb-8 flex items-center justify-between" data-aos="fade-up">
+    <div class="flex items-center gap-3">
+      <button type="button" class="md:hidden px-3 py-2 rounded-lg bg-gray-800 border border-gray-700" onclick="openAdminSidebar()"><i class="fa-solid fa-bars"></i></button>
       <h2 class="text-3xl font-semibold">Admin Panel</h2>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div class="mt-4 space-y-2">
-            {% for category, msg in messages %}
-              <div class="px-4 py-3 rounded {{ 'bg-teal-700 text-white' if category=='success' else 'bg-red-700 text-white' }}">{{ msg }}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
     </div>
     <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded text-white text-sm font-medium transition-colors">Logout</a>
   </div>
 
   <div class="flex flex-col md:flex-row gap-8">
+    <div id="admin-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="closeAdminSidebar()"></div>
     <!-- Sidebar Navigation -->
-    <div class="md:w-1/4 flex flex-col gap-2 md:sticky md:top-24">
-      <button onclick="showTab('site')" id="tab-site" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Site Info</button>
-      <button onclick="showTab('social')" id="tab-social" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Social Links</button>
-      <button onclick="showTab('about')" id="tab-about" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">About Me</button>
-      <button onclick="showTab('skills')" id="tab-skills" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Skills</button>
-      <button onclick="showTab('projects')" id="tab-projects" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Projects</button>
+    <div id="admin-sidebar" class="md:w-1/4 flex flex-col gap-2 md:sticky md:top-24 fixed md:relative inset-y-0 left-0 w-72 bg-gray-900/95 border-r border-gray-800 p-4 -translate-x-full md:translate-x-0 transition-transform duration-200 z-50" data-aos="fade-right">
+      <button data-ripple onclick="showTab('site')" id="tab-site" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Site Info</button>
+      <button data-ripple onclick="showTab('social')" id="tab-social" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Social Links</button>
+      <button data-ripple onclick="showTab('about')" id="tab-about" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">About Me</button>
+      <button data-ripple onclick="showTab('skills')" id="tab-skills" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Skills</button>
+      <button data-ripple onclick="showTab('projects')" id="tab-projects" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Projects</button>
+      <button data-ripple onclick="showTab('testimonials')" id="tab-testimonials" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Testimonials</button>
+      <button data-ripple onclick="showTab('cases')" id="tab-cases" class="text-left px-4 py-3 rounded-xl bg-gray-800 hover:bg-teal-700 focus:bg-teal-600 transition-colors">Case Studies</button>
     </div>
 
     <!-- Content Area -->
-    <div class="md:w-3/4">
+    <div class="md:w-3/4" data-aos="fade-left">
       
       <!-- Site Info Tab -->
-      <div id="content-site" class="tab-content hidden">
+      <div id="content-site" class="tab-content hidden transition-all duration-200">
         <h3 class="text-xl font-semibold mb-4">Site Information</h3>
         <form action="{{ url_for('admin') }}" method="POST" enctype="multipart/form-data" class="space-y-4 border border-gray-800 rounded-2xl p-6 bg-gray-800/50">
           <input type="hidden" name="section" value="site">
@@ -59,12 +54,20 @@
             <input name="image" type="file" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-teal-600 file:text-white hover:file:bg-teal-500">
             <p class="text-xs text-gray-500 mt-1">Recommended size: 400x400px</p>
           </div>
+          <div>
+            <label class="block text-sm mb-2">Resume PDF</label>
+            {% if content.site.resume %}
+            <a href="{{ url_for('static', filename='uploads/' + content.site.resume) }}" target="_blank" class="text-teal-400 hover:underline text-sm">Current Resume</a>
+            {% endif %}
+            <input name="resume" type="file" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-teal-600 file:text-white hover:file:bg-teal-500">
+            <p class="text-xs text-gray-500 mt-1">PDF only</p>
+          </div>
           <button type="submit" class="px-6 py-3 rounded bg-teal-600 hover:bg-teal-500">Save Site Info</button>
         </form>
       </div>
 
       <!-- Social Links Tab -->
-      <div id="content-social" class="tab-content hidden">
+      <div id="content-social" class="tab-content hidden transition-all duration-200">
         <h3 class="text-xl font-semibold mb-4">Social Links</h3>
         <div class="grid md:grid-cols-2 gap-8">
            <!-- Add Link Form -->
@@ -114,7 +117,7 @@
                     </div>
                  </div>
                  <div class="flex gap-2 flex-shrink-0">
-                   <button onclick="editSocial({{ loop.index0 }}, this)" data-social='{{ social|tojson|forceescape }}' class="text-teal-400 hover:text-teal-300"><i class="fa-solid fa-pen"></i></button>
+                   <button onclick="editSocial(Number(this.dataset.index), this)" data-index="{{ loop.index0 }}" data-social='{{ social|tojson|forceescape }}' class="text-teal-400 hover:text-teal-300"><i class="fa-solid fa-pen"></i></button>
                    <form action="{{ url_for('admin') }}" method="POST" class="inline" onsubmit="return confirm('Delete?');">
                       <input type="hidden" name="section" value="social">
                       <input type="hidden" name="action" value="delete">
@@ -129,7 +132,7 @@
       </div>
 
       <!-- About Tab -->
-      <div id="content-about" class="tab-content hidden">
+      <div id="content-about" class="tab-content hidden transition-all duration-200">
         <h3 class="text-xl font-semibold mb-4">About Section</h3>
         <form action="{{ url_for('admin') }}" method="POST" class="space-y-4 border border-gray-800 rounded-2xl p-6 bg-gray-800/50">
           <input type="hidden" name="section" value="about">
@@ -142,7 +145,7 @@
       </div>
 
       <!-- Skills Tab -->
-      <div id="content-skills" class="tab-content hidden">
+      <div id="content-skills" class="tab-content hidden transition-all duration-200">
         <h3 class="text-xl font-semibold mb-4">Skills Management</h3>
         <div class="grid md:grid-cols-2 gap-8">
           <!-- Add/Edit Skill -->
@@ -154,7 +157,17 @@
               <input type="hidden" name="index" id="skill-index">
               <div>
                 <label class="block text-sm mb-2">Skill Name</label>
-              <input name="name" id="skill-name" type="text" placeholder="e.g. Python" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600" required>
+                <input name="name" id="skill-name" type="text" placeholder="e.g. Python" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600" required>
+              </div>
+              <div class="grid grid-cols-1 gap-4">
+                <div>
+                  <label class="block text-sm mb-2">Level</label>
+                  <select name="level" id="skill-level" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                    <option>Beginner</option>
+                    <option selected>Intermediate</option>
+                    <option>Advanced</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label class="block text-sm mb-2">Icon Class (FontAwesome)</label>
@@ -178,14 +191,22 @@
             <div class="flex items-center justify-between p-3 rounded bg-gray-800 border border-gray-700">
               <div class="flex items-center gap-3">
                 {% if skill.image %}
-                <img src="{{ url_for('static', filename='uploads/' + skill.image) }}" class="w-8 h-8 object-contain">
+                <img src="{{ url_for('static', filename='uploads/' + skill.image) }}" class="w-8 h-8 rounded-full object-cover">
                 {% else %}
                 <i class="{{ skill.icon }} text-teal-400 w-8 text-center text-xl"></i>
                 {% endif %}
-                <span>{{ skill.name }}</span>
+                <span class="font-medium">{{ skill.name }}</span>
               </div>
+              {% if skill.level %}
+              <div class="mt-2 flex items-center gap-1.5">
+                {% set lvl = 2 if skill.level=='Beginner' else 4 if skill.level=='Intermediate' else 6 %}
+                {% for i in range(6) %}
+                  <span class="inline-block w-2 h-2 rounded-full {{ 'bg-teal-500' if i < lvl else 'bg-gray-700' }}"></span>
+                {% endfor %}
+              </div>
+              {% endif %}
               <div class="flex gap-2">
-                <button onclick="editSkill({{ loop.index0 }}, this)" data-skill='{{ skill|tojson|forceescape }}' class="text-teal-400 hover:text-teal-300"><i class="fa-solid fa-pen"></i></button>
+                <button onclick="editSkill(Number(this.dataset.index), this)" data-index="{{ loop.index0 }}" data-skill='{{ skill|tojson|forceescape }}' class="text-teal-400 hover:text-teal-300"><i class="fa-solid fa-pen"></i></button>
                 <form action="{{ url_for('admin') }}" method="POST" class="inline" onsubmit="return confirm('Delete this skill?');">
                   <input type="hidden" name="section" value="skills">
                   <input type="hidden" name="action" value="delete">
@@ -200,7 +221,7 @@
       </div>
 
       <!-- Projects Tab -->
-      <div id="content-projects" class="tab-content hidden">
+      <div id="content-projects" class="tab-content hidden transition-all duration-200">
         <h3 class="text-xl font-semibold mb-4">Project Management</h3>
         <div class="grid md:grid-cols-2 gap-8">
           <!-- Add/Edit Form -->
@@ -246,7 +267,7 @@
             {% for proj in content.projects.all %}
             <div class="border border-gray-800 rounded-lg p-4 bg-gray-800/50 relative group">
               <div class="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onclick="editProject({{ loop.index0 }}, this)" data-project='{{ proj|tojson|forceescape }}' class="p-2 bg-teal-600 rounded text-white hover:bg-teal-500"><i class="fa-solid fa-pen"></i></button>
+                <button onclick="editProject(Number(this.dataset.index), this)" data-index="{{ loop.index0 }}" data-project='{{ proj|tojson|forceescape }}' class="p-2 bg-teal-600 rounded text-white hover:bg-teal-500"><i class="fa-solid fa-pen"></i></button>
                 <form action="{{ url_for('admin') }}" method="POST" onsubmit="return confirm('Delete this project?');">
                     <input type="hidden" name="section" value="project">
                     <input type="hidden" name="action" value="delete">
@@ -262,17 +283,150 @@
           </div>
         </div>
       </div>
+      
+      <div id="content-testimonials" class="tab-content hidden transition-all duration-200">
+        <h3 class="text-xl font-semibold mb-4">Testimonials</h3>
+        <form action="{{ url_for('admin') }}" method="POST" class="space-y-4 border border-gray-800 rounded-2xl p-6 bg-gray-800/50">
+          <input type="hidden" name="section" value="testimonials">
+          <input type="hidden" name="action" value="add" id="testi-action">
+          <input type="hidden" name="index" id="testi-index">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm mb-2">Client Name</label>
+              <input name="name" id="testi-name" type="text" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+            </div>
+            <div>
+              <label class="block text-sm mb-2">Project Type</label>
+              <input name="project" id="testi-project" type="text" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm mb-2">Feedback</label>
+            <textarea name="feedback" id="testi-feedback" rows="3" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600"></textarea>
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="flex-1 px-6 py-3 rounded bg-teal-600 hover:bg-teal-500">Save</button>
+            <button type="button" onclick="resetTestiForm()" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600">Clear</button>
+          </div>
+        </form>
+        <div class="space-y-2 mt-6">
+          {% for t in content.testimonials or [] %}
+          <div class="flex items-center justify-between p-3 rounded bg-gray-800 border border-gray-700">
+            <div>
+              <div class="font-medium">{{ t.name }}</div>
+              <div class="text-xs text-gray-400">{{ t.project }}</div>
+              <div class="text-sm text-gray-300">{{ t.feedback }}</div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="editTestimonial(Number(this.dataset.index), this)" data-index="{{ loop.index0 }}" data-testi='{{ t|tojson|forceescape }}' class="text-teal-400 hover:text-teal-300"><i class="fa-solid fa-pen"></i></button>
+              <form action="{{ url_for('admin') }}" method="POST" onsubmit="return confirm('Delete this testimonial?');">
+                <input type="hidden" name="section" value="testimonials">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="index" value="{{ loop.index0 }}">
+                <button class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div id="content-cases" class="tab-content hidden transition-all duration-200">
+        <h3 class="text-xl font-semibold mb-4">Case Studies</h3>
+        <form action="{{ url_for('admin') }}" method="POST" class="space-y-4 border border-gray-800 rounded-2xl p-6 bg-gray-800/50">
+          <input type="hidden" name="section" value="cases">
+          <input type="hidden" name="action" value="add" id="case-action">
+          <input type="hidden" name="index" id="case-index">
+          <div>
+            <label class="block text-sm mb-2">Title</label>
+            <input name="title" id="case-title" type="text" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm mb-2">Problem</label>
+              <textarea name="problem" id="case-problem" rows="3" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm mb-2">Solution</label>
+              <textarea name="solution" id="case-solution" rows="3" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600"></textarea>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm mb-2">Tech</label>
+              <input name="tech" id="case-tech" type="text" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+            </div>
+            <div>
+              <label class="block text-sm mb-2">Result</label>
+              <input name="result" id="case-result" type="text" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="flex-1 px-6 py-3 rounded bg-teal-600 hover:bg-teal-500">Save</button>
+            <button type="button" onclick="resetCaseForm()" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600">Clear</button>
+          </div>
+        </form>
+        <div class="space-y-2 mt-6">
+          {% for c in content.case_studies or [] %}
+          <div class="flex items-center justify-between p-3 rounded bg-gray-800 border border-gray-700">
+            <div>
+              <div class="font-medium">{{ c.title }}</div>
+              <div class="text-sm text-gray-300">Tech: {{ c.tech }}</div>
+              <div class="text-sm text-gray-300">Result: {{ c.result }}</div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="editCase(Number(this.dataset.index), this)" data-index="{{ loop.index0 }}" data-case='{{ c|tojson|forceescape }}' class="text-teal-400 hover:text-teal-300"><i class="fa-solid fa-pen"></i></button>
+              <form action="{{ url_for('admin') }}" method="POST" onsubmit="return confirm('Delete this case study?');">
+                <input type="hidden" name="section" value="cases">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="index" value="{{ loop.index0 }}">
+                <button class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
 
     </div>
   </div>
 </section>
 
 <script>
+  function openAdminSidebar() {
+    const sidebar = document.getElementById('admin-sidebar');
+    const overlay = document.getElementById('admin-overlay');
+    if (sidebar && overlay) {
+      sidebar.classList.remove('-translate-x-full');
+      overlay.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+  }
+  function closeAdminSidebar() {
+    const sidebar = document.getElementById('admin-sidebar');
+    const overlay = document.getElementById('admin-overlay');
+    if (sidebar && overlay) {
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+  }
   function showTab(tabId) {
-    // Hide all contents
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    // Show selected
-    document.getElementById('content-' + tabId).classList.remove('hidden');
+    const next = document.getElementById('content-' + tabId);
+    const current = document.querySelector('.tab-content:not(.hidden)');
+    if (current && current !== next) {
+      current.classList.add('opacity-0', 'translate-y-1');
+      setTimeout(() => {
+        current.classList.add('hidden');
+        current.classList.remove('opacity-0', 'translate-y-1');
+      }, 150);
+    }
+    // Show target with a subtle transition
+    next.classList.remove('hidden');
+    next.classList.add('opacity-0', 'translate-y-1');
+    requestAnimationFrame(() => {
+      next.classList.remove('opacity-0', 'translate-y-1');
+    });
     
     // Update tab styles
     document.querySelectorAll('[id^="tab-"]').forEach(el => {
@@ -284,6 +438,7 @@
     
     // Persist to local storage
     localStorage.setItem('adminTab', tabId);
+    if (window.innerWidth < 768) closeAdminSidebar();
   }
 
   function editProject(index, btn) {
@@ -337,6 +492,7 @@
     document.getElementById('skill-index').value = index;
     document.getElementById('skill-name').value = data.name;
     document.getElementById('skill-icon').value = data.icon || "";
+    document.getElementById('skill-level').value = data.level || "Intermediate";
     document.getElementById('skill-action').value = "update";
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -345,6 +501,44 @@
     document.getElementById('skill-form').reset();
     document.getElementById('skill-index').value = "";
     document.getElementById('skill-action').value = "add";
+  }
+  
+  function editTestimonial(index, btn) {
+    const d = JSON.parse(btn.getAttribute('data-testi'));
+    document.getElementById('testi-index').value = index;
+    document.getElementById('testi-name').value = d.name || "";
+    document.getElementById('testi-project').value = d.project || "";
+    document.getElementById('testi-feedback').value = d.feedback || "";
+    document.getElementById('testi-action').value = "update";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function resetTestiForm() {
+    document.getElementById('testi-index').value = "";
+    document.getElementById('testi-action').value = "add";
+    document.getElementById('testi-name').value = "";
+    document.getElementById('testi-project').value = "";
+    document.getElementById('testi-feedback').value = "";
+  }
+  
+  function editCase(index, btn) {
+    const d = JSON.parse(btn.getAttribute('data-case'));
+    document.getElementById('case-index').value = index;
+    document.getElementById('case-title').value = d.title || "";
+    document.getElementById('case-problem').value = d.problem || "";
+    document.getElementById('case-solution').value = d.solution || "";
+    document.getElementById('case-tech').value = d.tech || "";
+    document.getElementById('case-result').value = d.result || "";
+    document.getElementById('case-action').value = "update";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function resetCaseForm() {
+    document.getElementById('case-index').value = "";
+    document.getElementById('case-action').value = "add";
+    document.getElementById('case-title').value = "";
+    document.getElementById('case-problem').value = "";
+    document.getElementById('case-solution').value = "";
+    document.getElementById('case-tech').value = "";
+    document.getElementById('case-result').value = "";
   }
 
   function editSocial(index, btn) {
@@ -367,6 +561,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     const savedTab = localStorage.getItem('adminTab') || 'site';
     showTab(savedTab);
+    window.addEventListener('resize', () => { if (window.innerWidth >= 768) closeAdminSidebar(); });
   });
 </script>
 {% endblock %}

@@ -4,7 +4,8 @@
     "brand": "Muhammad Moiz Ahmed",
     "role": "Backend Developer | AspiringAI Engineer",
     "description": "I build intelligent Python systems for automation, AI, and real-world problem solving",
-    "image": "photo.jpeg"
+    "image": "",
+    "resume": "muhammadmoizahmed_.pdf"
   },
   "social": [
     {
@@ -34,7 +35,9 @@
   "skills": [
     {
       "name": "Python",
-      "icon": "fa-brands fa-python"
+      "icon": "fa-brands fa-python",
+      "category": "Backend",
+      "level": "Intermediate"
     },
     {
       "name": "Pandas",
@@ -104,71 +107,29 @@
         "description": "Designed and developed a Python-based application to extract text from images using image processing and OCR techniques. Utilized OpenCV and Pytesseract for real-time text recognition, demonstrating practical implementation of AI concepts.",
         "link": "https://github.com/muhammadmoizahmed/ocr_app",
         "images": [
-          "1.png",
-          "2.png",
-          "3.png",
-          "4.png",
-          "5.png",
-          "6.png"
+          "projects/ocr-pro-python/photo.jpeg"
         ]
       },
       {
         "title": "Sign Language Recognition System (Python)",
         "description": "Built a Python-based Library Management System to automate book tracking, member records, and transactions. Implemented key features for efficient cataloging, borrowing/returning, and search functionality.",
         "link": "https://github.com/muhammadmoizahmed/LibraryManagement-System",
-        "images": [
-          "grey-and-dark-black-thank-you-.png",
-          "download.jpg",
-          "picture1.png",
-          "picture2.png",
-          "picture3.png",
-          "picture4.png",
-          "picture5.png",
-          "picture6.png"
-        ]
+        "images": []
       },
       {
         "title": "Bulk Email Sender Application (Python)",
         "description": "A complete bulk email sender application using Python to send large volumes of emails efficiently. Implemented features such as SMTP integration, email templating, attachment handling, error logging, and delivery status monitoring to ensure reliable and scalable email campaigns.",
-        "images": [
-          "Grey_and_Dark_Black_Thank_You_Greetings_Card.png",
-          "Screenshot_2026-01-06_161200.png",
-          "Screenshot_2026-01-06_161305.png",
-          "Screenshot_2026-01-06_161336.png",
-          "1.png",
-          "2.png",
-          "3.png",
-          "4.png"
-        ]
+        "images": []
       },
       {
         "title": "Automated Web Scraping Solutions (Python)",
         "description": "Developed automated web scraping tools in Python to extract structured data from dynamic and static websites. Utilized libraries such as Selenium, BeautifulSoup, and Requests to handle pagination, dynamic content, and data cleaning for reliable data extraction.",
-        "images": [
-          "grey-and-dark-black-thank-you-.png",
-          "1.png",
-          "2.png",
-          "3.png",
-          "4.png",
-          "5.png",
-          "6.png",
-          "7.png",
-          "8.png",
-          "9.png",
-          "10.png",
-          "11.png"
-        ]
+        "images": []
       },
       {
         "title": "CAPTCHA Handling & Automation",
         "description": "Implemented CAPTCHA handling and bypassing techniques for automation workflows using intelligent request handling, session management, and browser automation strategies to maintain efficiency while minimizing detection.",
-        "images": [
-          "1.png",
-          "2.png",
-          "3.png",
-          "4.png",
-          "5.png"
-        ]
+        "images": []
       },
       {
         "title": "API Integration & Automation",
@@ -179,19 +140,16 @@
         "title": "Purchasing / Checkout Automation Bot",
         "description": "Developed a Python-based purchasing bot to automate product selection, cart handling, checkout processes, and order confirmation on e-commerce platforms. Optimized for speed, reliability, and error handling.",
         "images": [
-          "1.png",
-          "2.png",
-          "3.png",
-          "4.png",
-          "5.png",
-          "6.png",
-          "7.png",
-          "8.png",
-          "9.png",
-          "10.png",
-          "11.png"
+          "projects/purchasing-checkout-automation-bot/Grey_and_Dark_Black_Thank_You_Greetings_Card.png"
         ]
       }
     ]
-  }
+  },
+  "testimonials": [
+    {
+      "name": "john",
+      "project": "ai photos",
+      "feedback": "jfdgxnzdhmzxfcmnjcfvhnxmhvjcnmx"
+    }
+  ]
 }
